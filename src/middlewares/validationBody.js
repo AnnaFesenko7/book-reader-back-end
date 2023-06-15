@@ -1,15 +1,14 @@
-const {RequestError} = require("../helpers");
+const createError = require('http-errors');
 
 const validationBody = schema => {
-    const func = (req, _, next) => {
-        const {error} = schema.validate(req.body);
-        if (error) {
-            next(RequestError(400, error.message));
-        }
-        next();
+  const func = async (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next(createError.BadRequest('missing required name field'));
     }
-
-    return func;
-}
+    next();
+  };
+  return func;
+};
 
 module.exports = validationBody;

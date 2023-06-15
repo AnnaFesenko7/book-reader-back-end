@@ -1,0 +1,30 @@
+[
+  {
+    "status": "haveRead",
+    "author": "Гюго",
+    "pages": "300",
+    "title": "Людина що сміється",
+    "year": "1980",
+    "rating": "5",
+    "resume": ""
+  },
+  {
+    "status": "reading",
+
+    "author": "J.K.Roling",
+    "pages": "400",
+    "title": "Harry Potter",
+    "year": "2014",
+    "rating": "2",
+    "resume": ""
+  },
+  {
+    "status": "toRead",
+    "author": "Жуль Верн",
+    "pages": "250",
+    "title": "15-тирічний капітан",
+    "year": "2008",
+    "rating": "4",
+    "resume": ""
+  }
+]

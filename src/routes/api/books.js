@@ -6,9 +6,9 @@ const {
   updateStatesValidation,
   updateResumeValidation,
   editBookValidation,
-} = require('../../middlewares/joi/joiBooksValidation');
+} = require('../../joiSchemas/joiBooksValidation');
 
-const authentificate = require('../../middlewares/autentificate');
+// const authentificate = require('../../middlewares/autentificate');
 
 const {
   listBooksController,
@@ -20,7 +20,7 @@ const {
   removeBookController,
 } = require('../../controllers/booksController');
 
-router.use(authentificate);
+// router.use(authentificate);
 
 router.get('/', listBooksController);
 

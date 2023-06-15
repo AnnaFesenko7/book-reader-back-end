@@ -10,8 +10,8 @@ const {
 
 const listBooksController = async (req, res, next) => {
   try {
-    const { _id: owner } = req.user;
-    const books = await listBooks(owner);
+    // const { _id: owner } = req.user;
+    const books = await listBooks();
     res.json({ status: 'success', code: 200, payload: { books } });
   } catch (err) {
     next(err);
@@ -36,9 +36,9 @@ const getByIdController = async (req, res, next) => {
 
 const addBookController = async (req, res, next) => {
   try {
-    const { _id: owner } = req.user;
+    // const { _id: owner } = req.user;
     const { title, author, year, pages } = req.body;
-    const book = await addBook({ title, author, year, pages, owner });
+    const book = await addBook({ title, author, year, pages });
     res.json({ status: 'Success', code: 200, payload: { book } });
   } catch (err) {
     next(err);
