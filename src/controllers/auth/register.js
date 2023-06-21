@@ -4,6 +4,7 @@ const { Conflict } = require('http-errors');
 const { User } = require('../../models');
 
 const register = async (req, res) => {
+  console.log(req.body);
   const { email, password, name } = req.body;
   const user = await User.findOne({ email });
 

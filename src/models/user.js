@@ -10,12 +10,15 @@ const usersRegisterSchema = joi.object({
   name: joi.string().min(3).max(100).trim().pattern(nameRegexp).required(),
   email: joi.string().min(10).max(63).pattern(emailRegExp).required(),
   password: joi.string().min(5).max(30).required(),
-  repeat_password: joi.ref('password'),
+  confirmPassword: joi.ref('password'),
 });
 
 const usersLoginSchema = joi.object({
   email: joi.string().min(10).max(63).pattern(emailRegExp).required(),
   password: joi.string().min(5).max(30).required(),
+});
+const usersChangeLangSchema = joi.object({
+  language: joi.string().allow('en', 'ua').required(),
 });
 
 // * Schema
@@ -41,6 +44,11 @@ const userSchema = Schema(
       type: String,
       default: null,
     },
+    language: {
+      type: String,
+      enum: ['ua', 'en'],
+      default: 'en',
+    },
     // verify: {
     //   type: Boolean,
     //   default: false,
@@ -64,4 +72,9 @@ const userSchema = Schema(
 // * Model
 const User = model('user', userSchema);
 
-module.exports = { User, usersRegisterSchema, usersLoginSchema };
+module.exports = {
+  User,
+  usersRegisterSchema,
+  usersLoginSchema,
+  usersChangeLangSchema,
+};

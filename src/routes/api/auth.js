@@ -21,4 +21,6 @@ router.post(
 );
 
 router.get('/logout', authenticate, ctrlWrapper(ctrl.logout));
+
+
 module.exports = router;

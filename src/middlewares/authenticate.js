@@ -1,32 +1,29 @@
-const User = require('../models/user');
-const { tokenVerify } = require('../services/tokenGeneration');
-const createError = require('http-errors');
+const { User } = require('../models');
+const { Unauthorized } = require('http-errors');
 
-const authenticate = async (req, res, next) => {
+require('dotenv').config();
+const { SECRET_KEY } = process.env;
+const jwt = require('jsonwebtoken');
+
+const authenticate = async (req, _, next) => {
+  const { authorization = '' } = req.headers;
+  const [bearer, token] = authorization.split(' ');
+
+  if (bearer !== 'Bearer') {
+    throw Unauthorized('Not auth');
+  }
   try {
-    const { authorization = '' } = req.headers;
-    const [bearer, token] = authorization.split(' ');
-    if (bearer !== 'Bearer') {
-      const error = createError(401, 'Not authorized');
-      throw error;
-    }
+    const { id } = jwt.verify(token, SECRET_KEY);
 
-    // ? Здесь может вылетить ошибка 500
-    const userId = tokenVerify(token);
+    const user = await User.findById(id);
 
-    const user = await User.findById(userId);
-    if (!user || user.token === null) {
-      const error = createError(401, 'Not authorized');
-      throw error;
+    if (!user || !user.token) {
+      throw Unauthorized('Not auth');
     }
     req.user = user;
     next();
-  } catch (err) {
-    if (!err.status) {
-      err.status = 401;
-      err.message = 'Not authorized';
-    }
-    next(err);
+  } catch (error) {
+    next(Unauthorized('Not auth'));
   }
 };
 
