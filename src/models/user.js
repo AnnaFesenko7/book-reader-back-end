@@ -21,6 +21,10 @@ const usersChangeLangSchema = joi.object({
   language: joi.string().allow('en', 'ua').required(),
 });
 
+const usersChangeTrainingStatusSchema = joi.object({
+  isTrainingStarted: joi.boolean().required(),
+});
+
 // * Schema
 const userSchema = Schema(
   {
@@ -48,6 +52,10 @@ const userSchema = Schema(
       type: String,
       enum: ['ua', 'en'],
       default: 'en',
+    },
+    isTrainingStarted: {
+      type: Boolean,
+      default: false,
     },
     // verify: {
     //   type: Boolean,
@@ -77,4 +85,5 @@ module.exports = {
   usersRegisterSchema,
   usersLoginSchema,
   usersChangeLangSchema,
+  usersChangeTrainingStatusSchema,
 };

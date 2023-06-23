@@ -1,14 +1,29 @@
-const express = require('express')
-const router = express.Router()
-const { trainingController } = require('../../controllers')
-const { controllerWrapper } = require('../../helpers')
-const { validationBody, authentificate } = require('../../middlewares')
-const { trainingSchemas } = require('../../models')
+const express = require('express');
+const router = express.Router();
+const { training: ctrl } = require('../../controllers');
+// const { auth: ctrl } = require('../../controllers');
 
-router.get('/', authentificate, controllerWrapper(trainingController.getTraining))
+const {
+  validationBody,
+  authenticate,
+  ctrlWrapper,
+} = require('../../middlewares');
+const { trainingSchemas } = require('../../models');
 
-router.post('/', authentificate, validationBody(trainingSchemas.schemaAddTraining), controllerWrapper(trainingController.addTraining))
+router.get('/', authenticate, ctrlWrapper(ctrl.getTraining));
 
-router.patch('/', authentificate, validationBody(trainingSchemas.schemaUpdateTraining), controllerWrapper(trainingController.updateTraining))
+router.post(
+  '/',
+  authenticate,
+  validationBody(trainingSchemas.schemaAddTraining),
+  ctrlWrapper(ctrl.addTraining)
+);
 
-module.exports = router
+router.patch(
+  '/',
+  authenticate,
+  validationBody(trainingSchemas.schemaUpdateTraining),
+  ctrlWrapper(ctrl.updateTraining)
+);
+
+module.exports = router;

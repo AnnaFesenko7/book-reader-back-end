@@ -24,10 +24,10 @@ const booksSchema = new mongoose.Schema({
   resume: {
     type: String,
   },
-  // owner: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'users',
-  // },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+  },
 });
 
 const Book = mongoose.model('book', booksSchema);

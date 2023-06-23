@@ -8,3 +8,10 @@ module.exports = router;
 
 router.put('/language', authenticate, ctrlWrapper(ctrl.changeLang));
 module.exports = router;
+
+router.put(
+  '/trainingStatus',
+  authenticate,
+  ctrlWrapper(ctrl.changeTrainingStatus)
+);
+module.exports = router;

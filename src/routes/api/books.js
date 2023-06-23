@@ -8,7 +8,7 @@ const {
   editBookValidation,
 } = require('../../joiSchemas/joiBooksValidation');
 
-// const authentificate = require('../../middlewares/autentificate');
+const authentificate = require('../../middlewares/authenticate');
 
 const {
   listBooksController,

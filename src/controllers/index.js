@@ -1,18 +1,11 @@
-const trainingController = require('./training');
+const training = require('./training');
 const auth = require('./auth');
 const users = require('./users');
+const books = require('./books');
 
 module.exports = {
   auth,
-  trainingController,
+  training,
   users,
+  books,
 };
-
-// const auth = require('./auth');
-// const products = require('./products');
-
-// module.exports = {
-//   auth,
-//   products,
-//
-// };

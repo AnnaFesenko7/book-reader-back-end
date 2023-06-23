@@ -4,7 +4,7 @@
 
 const getCurrent = async (req, res) => {
   console.log(req.user);
-  const { email, name, language } = req.user;
+  const { email, name, language, isTrainingStarted } = req.user;
 
   res.status(200).json({
     status: 'success',
@@ -13,6 +13,7 @@ const getCurrent = async (req, res) => {
       email,
       name,
       language,
+      isTrainingStarted,
     },
   });
 };
