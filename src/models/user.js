@@ -1,32 +1,12 @@
 const { Schema, model } = require('mongoose');
-const joi = require('joi');
 const {
   // passwordRegexp,
   nameRegexp,
   emailRegExp,
 } = require('../regularExpressions');
+const { handleMongooseError } = require('../helpers');
 
-const usersRegisterSchema = joi.object({
-  name: joi.string().min(3).max(100).trim().pattern(nameRegexp).required(),
-  email: joi.string().min(10).max(63).pattern(emailRegExp).required(),
-  password: joi.string().min(5).max(30).required(),
-  confirmPassword: joi.ref('password'),
-});
-
-const usersLoginSchema = joi.object({
-  email: joi.string().min(10).max(63).pattern(emailRegExp).required(),
-  password: joi.string().min(5).max(30).required(),
-});
-const usersChangeLangSchema = joi.object({
-  language: joi.string().allow('en', 'ua').required(),
-});
-
-const usersChangeTrainingStatusSchema = joi.object({
-  isTrainingStarted: joi.boolean().required(),
-});
-
-// * Schema
-const userSchema = Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -77,13 +57,8 @@ const userSchema = Schema(
   { versionKey: false, timestamps: true }
 );
 
-// * Model
+userSchema.post('save', handleMongooseError);
+
 const User = model('user', userSchema);
 
-module.exports = {
-  User,
-  usersRegisterSchema,
-  usersLoginSchema,
-  usersChangeLangSchema,
-  usersChangeTrainingStatusSchema,
-};
+module.exports = User;

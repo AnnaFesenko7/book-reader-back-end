@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { training: ctrl } = require('../../controllers');
-// const { auth: ctrl } = require('../../controllers');
 
 const {
-  validationBody,
   authenticate,
+  validationBody,
   ctrlWrapper,
 } = require('../../middlewares');
-const { trainingSchemas } = require('../../models');
+
+const { training: trainingSchemas } = require('../../joiSchemas');
 
 router.get('/', authenticate, ctrlWrapper(ctrl.getTraining));
 

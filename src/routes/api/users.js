@@ -1,17 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const { users: ctrl } = require('../../controllers');
-const { authenticate, ctrlWrapper } = require('../../middlewares');
+const { authenticate, validationBody } = require('../../middlewares');
 
-router.get('/current', authenticate, ctrlWrapper(ctrl.getCurrent));
-module.exports = router;
+const { users } = require('../../joiSchemas');
 
-router.put('/language', authenticate, ctrlWrapper(ctrl.changeLang));
-module.exports = router;
+router.get('/current', authenticate, ctrl.getCurrent);
+
+router.put(
+  '/language',
+  validationBody(users.changeLangSchema),
+  authenticate,
+  ctrl.changeLang
+);
 
 router.put(
   '/trainingStatus',
+  validationBody(users.changeTrainingStatusSchema),
   authenticate,
-  ctrlWrapper(ctrl.changeTrainingStatus)
+  ctrl.changeTrainingStatus
 );
 module.exports = router;

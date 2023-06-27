@@ -1,12 +1,15 @@
-const controllerWrapper = require('./controllerWrapper')
-const RequestError = require('./RequestError')
-const handleSchemaValidationErrors = require('./handleSchemaValidationErrors')
-const { isYesterdayOrToday, createTodayUTC } = require('./isYesterdayOrToday')
+const RequestError = require('./RequestError');
+const handleSchemaValidationErrors = require('./handleSchemaValidationErrors');
+const { isYesterdayOrToday, createTodayUTC } = require('./isYesterdayOrToday');
+const handleMongooseError = require('./handleMongooseError');
+const tokenGeneration = require('./tokenGeneration');
 
 module.exports = {
-    controllerWrapper,
-    RequestError,
-    handleSchemaValidationErrors,
-    isYesterdayOrToday,
-    createTodayUTC
-}
+  RequestError,
+  handleSchemaValidationErrors,
+  isYesterdayOrToday,
+  createTodayUTC,
+
+  handleMongooseError,
+  tokenGeneration,
+};

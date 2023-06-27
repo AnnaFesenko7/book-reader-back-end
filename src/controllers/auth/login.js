@@ -1,12 +1,11 @@
 const { Unauthorized } = require('http-errors');
 const { User } = require('../../models');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const { SECRET_KEY } = process.env;
+const { tokenGeneration } = require('../../helpers');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -20,8 +19,8 @@ const login = async (req, res) => {
   const payload = {
     id: user._id,
   };
-  console.log(SECRET_KEY);
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
+  const token = tokenGeneration(payload);
+
   await User.findByIdAndUpdate(user._id, { token });
   res.status(200).json({
     status: 'success',

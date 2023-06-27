@@ -1,47 +1,43 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-  addBookValidation,
-  updateStatesValidation,
-  updateResumeValidation,
-  editBookValidation,
-} = require('../../joiSchemas/joiBooksValidation');
 
-const authentificate = require('../../middlewares/authenticate');
 
 const {
-  listBooksController,
-  getByIdController,
-  addBookController,
-  updateBookStatusController,
-  updateBookResumeController,
-  editBookController,
-  removeBookController,
-} = require('../../controllers/booksController');
+  authenticate,
+  validationBody,
+  isValidId,
+} = require('../../middlewares');
 
-// router.use(authentificate);
+const { books: joiSchema } = require('../../joiSchemas');
+const { books: ctrl } = require('../../controllers');
 
-router.get('/', listBooksController);
 
-router.get('/:bookId', getByIdController);
 
-router.post('/', addBookValidation, addBookController);
+router.use(authenticate);
 
-router.put(
-  '/status/:bookId',
-  updateStatesValidation,
-  updateBookStatusController
+router.get('/', ctrl.getAll);
+
+router.get('/:id', isValidId, ctrl.getById);
+
+router.post('/', validationBody(joiSchema.addBook), ctrl.add);
+
+router.patch(
+  '/status/:id',
+  isValidId,
+  validationBody(joiSchema.updateStatus),
+  ctrl.updateStatus
 );
 
-router.put(
-  '/resume/:bookId',
-  updateResumeValidation,
-  updateBookResumeController
+router.patch(
+  '/opinion/:id',
+  isValidId,
+  validationBody(joiSchema.updateRating),
+  ctrl.updateRating
 );
 
-router.put('/edit/:bookId', editBookValidation, editBookController);
+// router.put('/edit/:bookId', editBookValidation, editBookController);
 
-router.delete('/:bookId', removeBookController);
+router.delete('/:id', isValidId, ctrl.deleteBook);
 
 module.exports = router;

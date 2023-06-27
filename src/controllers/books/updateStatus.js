@@ -1,17 +1,19 @@
 const { Book } = require('../../models');
 const { NotFound } = require('http-errors');
 
-const updateRating = async (req, res) => {
-  const { _id: owner } = req.user;
+const updateStatus = async (req, res) => {
   const { id } = req.params;
-  const { resume, rating } = req.body;
+  const { _id: owner } = req.user;
+  const { status } = req.body;
+
   const updatedBook = await Book.findByIdAndUpdate(
     { _id: id, owner },
-    { resume, rating },
+    { $set: { status } },
     { new: true }
   );
+
   if (!updatedBook) {
-    throw NotFound(`Product with id ${id} not found`);
+    throw NotFound(`Book with id ${id} not found`);
   }
   res.status(200).json({
     status: 'success',
@@ -19,5 +21,4 @@ const updateRating = async (req, res) => {
     payload: { updatedBook },
   });
 };
-
-module.exports = updateRating;
+module.exports = updateStatus;

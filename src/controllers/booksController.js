@@ -92,12 +92,12 @@ const removeBookController = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  listBooksController,
-  getByIdController,
-  addBookController,
-  updateBookStatusController,
-  updateBookResumeController,
-  editBookController,
-  removeBookController,
-};
+// module.exports = {
+//   listBooksController,
+//   getByIdController,
+//   addBookController,
+//   updateBookStatusController,
+//   updateBookResumeController,
+//   editBookController,
+//   removeBookController,
+// };
