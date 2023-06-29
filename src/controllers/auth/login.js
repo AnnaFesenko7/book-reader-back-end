@@ -1,5 +1,6 @@
 const { Unauthorized } = require('http-errors');
 const { User } = require('../../models');
+const { authServices } = require('../../services');
 const bcrypt = require('bcrypt');
 const { tokenGeneration } = require('../../helpers');
 
@@ -21,7 +22,8 @@ const login = async (req, res) => {
   };
   const token = tokenGeneration(payload);
 
-  await User.findByIdAndUpdate(user._id, { token });
+  const updatedUser = authServices.login(user._id, token);
+
   res.status(200).json({
     status: 'success',
     code: 200,

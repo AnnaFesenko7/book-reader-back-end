@@ -7,14 +7,14 @@ const jwt = require('jsonwebtoken');
 const authenticate = async (req, _, next) => {
   const { authorization = '' } = req.headers;
   const [bearer, token] = authorization.split(' ');
-  console.log(User);
+
   try {
     if (bearer !== 'Bearer') {
       throw Unauthorized('Not auth');
     }
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(id);
-    if (!user || !user.token) {
+    if (!user || !user.token || user.token !== token) {
       throw Unauthorized('Not auth');
     }
     req.user = user;

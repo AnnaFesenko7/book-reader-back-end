@@ -15,7 +15,7 @@ router.get('/', authenticate, ctrlWrapper(ctrl.getTraining));
 router.post(
   '/',
   authenticate,
-  validationBody(trainingSchemas.schemaAddTraining),
+  // validationBody(trainingSchemas.schemaAddTraining),
   ctrlWrapper(ctrl.addTraining)
 );
 

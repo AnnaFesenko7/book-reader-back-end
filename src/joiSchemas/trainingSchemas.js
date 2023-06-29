@@ -1,19 +1,25 @@
 const Joi = require('joi');
 
 const schemaAddTraining = Joi.object({
-  startDate: Joi.date().label('Training Start Date').iso().required(),
+  startDate: Joi.number()
+    // .date()
+    // .label('Training Start Date')
+    // .iso()
+    .required(),
 
-  finishDate: Joi.date()
-    .label('Training Finish Date')
-    .iso()
-    .min(Joi.ref('startDate'))
+  finishDate: Joi
+    // .date()
+    .number()
+    // .label('Training Finish Date')
+    // .iso()
+    // .min(Joi.ref('startDate'))
     .required(),
 
   books: Joi.array()
-    .label('Books Array')
-    .min(1)
-    .items(Joi.object({ _id: Joi.string().required() }))
-    .unique('_id')
+    // .label('Books Array')
+    // .min(1)
+    // .items(Joi.object({ _id: Joi.string().required() }))
+    // .unique('_id')
     .required(),
 });
 

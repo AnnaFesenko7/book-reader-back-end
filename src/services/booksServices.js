@@ -1,4 +1,4 @@
-const Book = require('../models/books');
+const { Book } = require('../models');
 
 const listBooks = async owner => {
   const books = await Book.find({ owner }).select({ __v: 0 });
@@ -10,10 +10,9 @@ const getById = async ({ bookId, owner }) => {
   return book;
 };
 
-const addBook = async ({ title, author, year, pages, owner }) => {
-  const book = new Book({ title, author, year, pages, owner });
-  const newBook = await book.save();
-  return newBook;
+const addBook = async (newBook, owner) => {
+  console.log(Book);
+  return await Book.create({ ...newBook, owner: owner });
 };
 
 const updateBookStatus = async (bookId, owner, { status }) => {
