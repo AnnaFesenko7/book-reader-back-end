@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
-
 const {
   authenticate,
   validationBody,
@@ -11,8 +9,6 @@ const {
 
 const { books: joiSchema } = require('../../joiSchemas');
 const { books: ctrl } = require('../../controllers');
-
-
 
 router.use(authenticate);
 

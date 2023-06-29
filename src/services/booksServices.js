@@ -34,7 +34,7 @@ const editBook = async (contactId, owner, bookData) => {
   return book;
 };
 
-const removeBook = async ({ bookId, owner }) => {
+const removeBook = async (bookId, owner) => {
   await Book.findByIdAndRemove({ _id: bookId, owner });
 };
 
