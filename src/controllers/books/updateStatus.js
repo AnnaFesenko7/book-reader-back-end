@@ -1,16 +1,19 @@
-const { Book } = require('../../models');
+// const { Book } = require('../../models');
 const { NotFound } = require('http-errors');
+const { booksServices } = require('../../services');
 
 const updateStatus = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
   const { status } = req.body;
 
-  const updatedBook = await Book.findByIdAndUpdate(
-    { _id: id, owner },
-    { $set: { status } },
-    { new: true }
-  );
+  // const updatedBook = await Book.findByIdAndUpdate(
+  //   { _id: id, owner },
+  //   { $set: { status } },
+  //   { new: true }
+  // );
+
+  const updatedBook = await booksServices.updateStatus(id, owner, status);
 
   if (!updatedBook) {
     throw NotFound(`Book with id ${id} not found`);

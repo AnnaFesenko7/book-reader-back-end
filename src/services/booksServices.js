@@ -1,26 +1,28 @@
 const { Book } = require('../models');
 
-const listBooks = async owner => {
-  const books = await Book.find({ owner }).select({ __v: 0 });
+const getAll = async owner => {
+  const books = await Book.find({ owner }).populate('owner', 'name email');
   return books;
 };
 
-const getById = async ({ bookId, owner }) => {
-  const book = await Book.findOne({ _id: bookId, owner });
-  return book;
+const getById = async (id, owner) => {
+  return await Book.findOne({ _id: id, owner });
 };
 
 const addBook = async (newBook, owner) => {
-  console.log(Book);
   return await Book.create({ ...newBook, owner: owner });
 };
 
-const updateBookStatus = async (bookId, owner, { status }) => {
-  await Book.findByIdAndUpdate({ _id: bookId, owner }, { $set: { status } });
+const updateStatus = async (id, owner, status) => {
+  return await Book.findByIdAndUpdate(
+    { _id: id, owner },
+    { $set: { status } },
+    { new: true }
+  );
 };
 
-const updateBookResume = async (bookId, owner, { resume, rating }) => {
-  await Book.findByIdAndUpdate(
+const updateResume = async (bookId, owner, { resume, rating }) => {
+  return await Book.findByIdAndUpdate(
     { _id: bookId, owner },
     { $set: { resume, rating } }
   );
@@ -39,11 +41,11 @@ const removeBook = async (bookId, owner) => {
 };
 
 module.exports = {
-  listBooks,
+  getAll,
   getById,
   addBook,
-  updateBookStatus,
-  updateBookResume,
+  updateStatus,
+  updateResume,
   editBook,
   removeBook,
 };

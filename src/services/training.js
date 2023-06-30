@@ -1,9 +1,6 @@
 const { Training } = require('../models');
 
 const addTraining = async (owner, body) => {
-  //   console.log(body);
-  //   console.log(Training.create);
-
   return await Training.create({ ...body, owner: owner });
 };
 
