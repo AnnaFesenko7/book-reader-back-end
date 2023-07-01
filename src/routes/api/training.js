@@ -19,10 +19,10 @@ router.post(
   ctrlWrapper(ctrl.addTraining)
 );
 
-router.patch(
+router.put(
   '/',
   authenticate,
-  validationBody(trainingSchemas.schemaUpdateTraining),
+  // validationBody(trainingSchemas.schemaUpdateTraining),
   ctrlWrapper(ctrl.updateTraining)
 );
 

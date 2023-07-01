@@ -21,18 +21,18 @@ const trainingsSchema = new mongoose.Schema(
         // index: true,
       },
     ],
-    // results: [
-    //   {
-    //     date: {
-    //       type: Date,
-    // required: [true, 'Set date for added read pages'],
-    // },
-    // pages: {
-    //   type: Number,
-    // required: [true, 'Set number of pages read for specified time'],
-    //     },
-    //   },
-    // ],
+    results: [
+      {
+        date: {
+          type: Date,
+          required: [true, 'Set date for added read pages'],
+        },
+        pages: {
+          type: Number,
+          required: [true, 'Set number of pages read for specified time'],
+        },
+      },
+    ],
     completed: {
       type: Boolean,
       // required: [true, 'Set completed status'],
