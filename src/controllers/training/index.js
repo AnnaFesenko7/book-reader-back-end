@@ -1,10 +1,14 @@
 const addTraining = require('./addTraining');
 const getTraining = require('./getTraining');
-const updateTraining = require('./updateTraining');
+const addResults = require('./addResults');
+const completeness = require('./completeness');
+const deleteTraining = require('./deleteTraining');
 const { ctrlWrapper } = require('../../middlewares');
 
 module.exports = {
-  addTraining,
-  getTraining,
-  updateTraining,
+  addTraining: ctrlWrapper(addTraining),
+  getTraining: ctrlWrapper(getTraining),
+  addResults: ctrlWrapper(addResults),
+  completeness: ctrlWrapper(completeness),
+  deleteTraining: ctrlWrapper(deleteTraining),
 };

@@ -4,12 +4,8 @@ const addTraining = async (owner, body) => {
   return await Training.create({ ...body, owner: owner });
 };
 
-const deleteTraining = async id => {
-  return await Training.findByIdAndDelete(id);
-};
-
 const getTraining = async owner => {
-  return await Training.findOne({ owner }).populate('books');
+  return await Training.findOne({ owner });
 };
 
 const updateTraining = async (id, body) => {
@@ -17,6 +13,14 @@ const updateTraining = async (id, body) => {
     upsert: true,
     new: true,
   }).populate('books');
+};
+
+const completeness = async (_id, owner, { completed }) => {
+  return await Training.findByIdAndUpdate(
+    { _id, owner },
+    { $set: { completed } },
+    { new: true }
+  );
 };
 
 const addResults = async (id, body) => {
@@ -27,10 +31,15 @@ const addResults = async (id, body) => {
   ).populate('books');
 };
 
+const deleteTraining = async (id, owner) => {
+  await Training.findByIdAndRemove({ _id: id, owner });
+};
+
 module.exports = {
   addTraining,
   getTraining,
   updateTraining,
   deleteTraining,
   addResults,
+  completeness,
 };
