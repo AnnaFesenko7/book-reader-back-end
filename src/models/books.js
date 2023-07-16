@@ -30,6 +30,7 @@ const booksSchema = new mongoose.Schema({
   },
   resume: {
     type: String,
+    default: '',
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

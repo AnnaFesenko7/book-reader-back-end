@@ -6,7 +6,7 @@ const { authenticate, validationBody } = require('../../middlewares');
 
 const { training: trainingSchemas } = require('../../joiSchemas');
 
-router.get('/', authenticate, ctrl.completeness, ctrl.getTraining);
+router.get('/', authenticate, ctrl.getTraining);
 
 router.post(
   '/',
@@ -15,7 +15,7 @@ router.post(
   ctrl.addTraining
 );
 router.delete(
-  '/',
+  '/:id',
   authenticate,
   // validationBody(trainingSchemas.schemaAddTraining),
   ctrl.deleteTraining

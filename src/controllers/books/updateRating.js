@@ -5,6 +5,8 @@ const updateRating = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
   const { resume, rating } = req.body;
+  console.log('🚀 ~ file: updateRating.js:8 ~ updateRating ~ resume:', resume);
+
   const updatedBook = await Book.findByIdAndUpdate(
     { _id: id, owner },
     { resume, rating },

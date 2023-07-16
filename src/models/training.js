@@ -1,17 +1,15 @@
 const mongoose = require('mongoose');
-
+const { completenessReasonList } = require('../valuesLists');
 const { handleSchemaValidationErrors } = require('../helpers');
 
 const trainingsSchema = new mongoose.Schema(
   {
     startDate: {
-      // type: Date,
       type: Number,
       required: [true, 'Set start date for new training'],
     },
     finishDate: {
       type: Number,
-      // type: Date,
       required: [true, 'Set finish date for new training'],
     },
     books: [
@@ -35,8 +33,12 @@ const trainingsSchema = new mongoose.Schema(
     ],
     completed: {
       type: Boolean,
-      // required: [true, 'Set completed status'],
       default: false,
+    },
+    completenessReason: {
+      type: String,
+      enum: completenessReasonList,
+      default: '',
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

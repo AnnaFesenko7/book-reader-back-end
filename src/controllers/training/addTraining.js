@@ -3,6 +3,7 @@ const { RequestError } = require('../../helpers');
 
 const addTraining = async (req, res) => {
   const { _id: owner } = req.user;
+
   const { body } = req;
 
   // const now = new Date();
@@ -20,11 +21,11 @@ const addTraining = async (req, res) => {
     await booksServices.updateStatus(id, owner, 'reading');
   });
 
-  await trainingServices.addTraining(owner, body);
+  const createdTraining = await trainingServices.addTraining(owner, body);
 
   // const currentTraining = await trainingServices.getTraining(owner);
   // res.status(201).json(currentTraining);
-  res.status(201).json({ status: 'success', code: 201 });
+  res.status(201).json(createdTraining);
   // if (currentTraining) {
   // const { finishDate, completed, _id } = currentTraining;
   // if (!completed) {
