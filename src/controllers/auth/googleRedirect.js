@@ -1,9 +1,10 @@
 const queryString = require('query-string');
 require('dotenv').config();
 const axios = require('axios');
+const { User } = require('../../models');
+const { tokenGeneration } = require('../../helpers');
 
 const googleRedirect = async (req, res) => {
-  console.log('redirect');
   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const urlObj = new URL(fullUrl);
   const urlParams = queryString.parse(urlObj.search);
@@ -26,12 +27,25 @@ const googleRedirect = async (req, res) => {
       Authorization: `Bearer ${tokenData.data.access_token}`,
     },
   });
-  // userData.data.email
-  // ...
-  // ...
-  // ...
+  const { email, name, picture } = userData.data;
+  let profile = await User.findOne({ email });
+
+  if (!profile) {
+    await User.create({
+      name,
+      email,
+    });
+    profile = await User.findOne({ email });
+  }
+  const payload = { id: profile._id };
+  const token = tokenGeneration(payload);
+  await User.findByIdAndUpdate(profile._id, { token });
+
   return res.redirect(
-    `${process.env.FRONTEND_URL}?email=${userData.data.email}`
+    `${process.env.FRONTEND_URL}login/?token=${token}&name=${name}&avatar=${picture}`
   );
+  // return res.redirect(
+  //   `${process.env.FRONTEND_URL}?email=${userData.data.email}`
+  // );
 };
 module.exports = googleRedirect;

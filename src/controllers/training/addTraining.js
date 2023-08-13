@@ -6,8 +6,6 @@ const addTraining = async (req, res) => {
 
   const { body } = req;
 
-  // const now = new Date();
-
   body.books.forEach(async id => {
     const originalBook = await booksServices.getById(id, owner);
 
@@ -23,25 +21,7 @@ const addTraining = async (req, res) => {
 
   const createdTraining = await trainingServices.addTraining(owner, body);
 
-  // const currentTraining = await trainingServices.getTraining(owner);
-  // res.status(201).json(currentTraining);
   res.status(201).json(createdTraining);
-  // if (currentTraining) {
-  // const { finishDate, completed, _id } = currentTraining;
-  // if (!completed) {
-  // if (finishDate >= now) {
-  //   const difference = finishDate - now;
-  //   const totalDays = Math.ceil(difference / (1000 * 3600 * 24));
-  //   throw RequestError(
-  //     403,
-  //     `Training is in progress. Try again in ${totalDays} days.`
-  //   );
-  // }
-  //     res.status(201).json(currentTraining);
-  //   } else {
-  //     await trainingServices.deleteTraining(_id);
-  //   }
-  // }
 };
 
 module.exports = addTraining;
