@@ -11,7 +11,6 @@ const userSchema = new Schema(
     name: {
       type: String,
       minlength: 2,
-      match: nameRegexp,
     },
     password: {
       type: String,
