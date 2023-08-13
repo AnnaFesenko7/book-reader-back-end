@@ -27,11 +27,11 @@ router.patch(
   // validationBody(trainingSchemas.schemaUpdateTraining),
   ctrl.addResults
 );
-router.patch(
-  '/completeness',
-  authenticate,
-  // validationBody(trainingSchemas.schemaUpdateTraining),
-  ctrl.completeness
-);
+// router.patch(
+//   '/completeness',
+//   authenticate,
+
+//   ctrl.completeness
+// );
 
 module.exports = router;
