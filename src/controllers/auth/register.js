@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const { Conflict } = require('http-errors');
+const { Conflict, BadRequest } = require('http-errors');
 const { User } = require('../../models');
 
 const register = async (req, res) => {
@@ -8,6 +8,9 @@ const register = async (req, res) => {
   const { email, password, name } = req.body;
   const user = await User.findOne({ email });
 
+  if (!email || !password || !name) {
+    throw new BadRequest('Missing required field');
+  }
   if (user) {
     throw new Conflict(`User with ${email} already exist`);
   }
@@ -19,6 +22,7 @@ const register = async (req, res) => {
     status: 'created',
     code: 201,
     user: {
+      id: newUser._id,
       name: newUser.name,
       email: newUser.email,
     },

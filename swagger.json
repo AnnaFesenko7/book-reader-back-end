@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "https://booker-back-end.herokuapp.com" }],
+  "servers": [{ "url": "https://book-reader-jr3w.onrender.com/api" }],
   "tags": [
     {
       "name": "Auth",
@@ -31,7 +31,7 @@
     }
   ],
   "paths": {
-    "/api/user/registration": {
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
@@ -59,18 +59,30 @@
             }
           },
           "400": {
-            "description": "missing required name field or the field did not pass validation",
-            "content": {}
+            "description": "Missing required name field or the field did not pass validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponseNotValid"
+                }
+              }
+            }
           },
           "409": {
             "description": "User with this email is already registered",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponseWithReject"
+                }
+              }
+            }
           }
         }
       }
     },
 
-    "/api/user/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -110,7 +122,7 @@
       }
     },
 
-    "/api/user/logout": {
+    "/auth/logout": {
       "get": {
         "tags": ["Auth"],
         "summary": "User logout",
@@ -129,138 +141,7 @@
       }
     },
 
-    "/api/user/verify/{verificationToken}": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Verify user email",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "verificationToken",
-            "type": "string",
-            "example": "70c8de25-b20b-4a27-b63c-91686c99c9d3",
-            "description": "verificationToken of user",
-            "required": true
-          }
-        ],
-
-        "responses": {
-          "302": {
-            "description": "Redirect to login route"
-          },
-
-          "404": {
-            "description": "User not found",
-            "content": {}
-          }
-        }
-      }
-    },
-
-    "/api/user/verify": {
-      "post": {
-        "tags": ["Auth"],
-        "summary": "resend verificationToken to email",
-        "parameters": [],
-        "requestBody": {
-          "description": "Object for resend verificationToken",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostVerifyRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostVerifyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "This mail is not registered or Verification has already been passed",
-            "content": {}
-          }
-        }
-      }
-    },
-
-    "/api/user/forgotPassword": {
-      "patch": {
-        "tags": ["Auth"],
-        "summary": "Post newPassword",
-        "parameters": [],
-        "requestBody": {
-          "description": "newPassword's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PatchForgotPasswordRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PatchForgotPasswordResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "missing required name field or the field did not pass validation",
-            "content": {}
-          },
-
-          "401": {
-            "description": "This mail is not registered or Email not verify",
-            "content": {}
-          }
-        }
-      }
-    },
-
-    "/api/user/forgotPassword/{newPasswordToken}": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Confirm new password",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "newPasswordToken",
-            "type": "string",
-            "example": "6fe48f15-6cbe-4275-9540-b8a04b3b264d",
-            "description": "newPasswordToken",
-            "required": true
-          }
-        ],
-
-        "responses": {
-          "302": {
-            "description": "Redirect to login route"
-          },
-
-          "404": {
-            "description": "User not found",
-            "content": {}
-          }
-        }
-      }
-    },
-
-    "/api/user/current": {
+    "/user/current": {
       "get": {
         "tags": ["User"],
         "summary": "Current User info",
@@ -702,80 +583,82 @@
         }
       },
 
+      "RegistrationResponseNotValid": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Missing required field",
+            "example": "Missing required field"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 400
+          }
+        }
+      },
+
+      "RegistrationResponseWithReject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "User with this email is already registered",
+            "example": "User with user@example.com already exist"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 409
+          }
+        }
+      },
+
       "RegistrationResponse": {
         "type": "object",
         "properties": {
-          "data": {
+          "status": {
+            "type": "string",
+            "description": "created",
+            "example": "created"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 201
+          },
+          "user": {
             "type": "object",
             "properties": {
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "6313700a788308a1f5ee225"
+              },
+
               "name": {
                 "type": "string",
                 "description": "User's name",
                 "example": "Mango"
               },
 
-              "password": {
-                "type": "string",
-                "description": "User's hashpassword",
-                "example": "$2a$10$brs0hDVMGOWgv6D.qTD/vOhUbBL/NXWMPyNyervXeYeY0pRche.Hm"
-              },
-
               "email": {
                 "type": "string",
                 "description": "User's email",
                 "format": "email"
-              },
-
-              "token": {
-                "type": null,
-                "description": "User's token",
-                "example": null
-              },
-
-              "verify": {
-                "type": null,
-                "description": "if users mail is verified",
-                "example": null
-              },
-
-              "verificationToken": {
-                "type": "string",
-                "description": "token to get varification",
-                "example": "90848095-2aa5-4930-b148-d2e273b3d534"
-              },
-
-              "newPassword": {
-                "type": "string",
-                "description": "new password if user dont know password",
-                "example": ""
-              },
-
-              "newPasswordToken": {
-                "type": "string",
-                "description": "token to confirm new password",
-                "example": ""
-              },
-
-              "_id": {
-                "type": "string",
-                "description": "User's id",
-                "example": "6313700a788308a1f5ee225"
               }
             }
           }
         },
 
         "example": {
-          "data": {
+          "status": "created",
+          "code": 201,
+          "user": {
+            "id": "64dce6cf694abb2cddb0a228",
             "name": "Mango",
-            "password": "$2b$10$hzBbMp/LXOdehW23fGBNT.v76O9AM5fepJGDdlaJgk8eSAMGiBaaG",
-            "email": "user@example.com",
-            "token": null,
-            "verify": false,
-            "verificationToken": "90848095-2aa5-4930-b148-d2e273b3d534",
-            "newPassword": "",
-            "newPasswordToken": "",
-            "_id": "6339ed0a66fcaa338445957a"
+            "email": "user@example.com"
           }
         }
       },

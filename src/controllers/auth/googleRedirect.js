@@ -44,8 +44,5 @@ const googleRedirect = async (req, res) => {
   return res.redirect(
     `${process.env.FRONTEND_URL}/login/?token=${token}&name=${name}&avatar=${picture}`
   );
-  // return res.redirect(
-  //   `${process.env.FRONTEND_URL}?email=${userData.data.email}`
-  // );
 };
 module.exports = googleRedirect;
