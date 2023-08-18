@@ -63,7 +63,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponseNotValid"
+                  "$ref": "#/components/schemas/RegistrationResponseBadRequest"
                 }
               }
             }
@@ -73,7 +73,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponseWithReject"
+                  "$ref": "#/components/schemas/RegistrationResponseConflict"
                 }
               }
             }
@@ -110,13 +110,25 @@
             }
           },
           "400": {
-            "description": "missing required name field or the field did not pass validation",
-            "content": {}
+            "description": "Missing required name field or the field did not pass validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseBadRequest"
+                }
+              }
+            }
           },
 
           "401": {
             "description": "Email or password is wrong",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseUnauthorized"
+                }
+              }
+            }
           }
         }
       }
@@ -583,7 +595,7 @@
         }
       },
 
-      "RegistrationResponseNotValid": {
+      "RegistrationResponseBadRequest": {
         "type": "object",
         "properties": {
           "message": {
@@ -599,7 +611,7 @@
         }
       },
 
-      "RegistrationResponseWithReject": {
+      "RegistrationResponseConflict": {
         "type": "object",
         "properties": {
           "message": {
@@ -680,57 +692,67 @@
         }
       },
 
-      "LoginResponse": {
-        "type": "object",
-
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "User's token",
-            "example": "7c65b154-f218-4417-a0a8-b2609d9c0de4"
-          },
-          "name": {
-            "type": "string",
-            "description": "User's token",
-            "example": "Mango"
-          }
-        },
-
-        "example": {
-          "token": "7c65b154-f218-4417-a0a8-b2609d9c0de4",
-          "name": "Mango"
-        }
-      },
-
-      "PatchForgotPasswordRequest": {
-        "type": "object",
-        "required": ["email", "password"],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "example": "qwerty123"
-          }
-        }
-      },
-
-      "PatchForgotPasswordResponse": {
+      "LoginResponseBadRequest": {
         "type": "object",
         "properties": {
           "message": {
             "type": "string",
-            "description": "succses",
-            "example": "We have sent you a link to your email to confirm your new password."
+            "description": "Missing required field",
+            "example": "Missing required field"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 400
+          }
+        }
+      },
+
+      "LoginResponseUnauthorized": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Email or password is wrong",
+            "example": "Password wrong"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 400
+          }
+        }
+      },
+
+      "LoginResponse": {
+        "type": "object",
+
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "success",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 200
+          },
+          "data": {
+            "token": {
+              "type": "string",
+              "description": "User's token",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGRlMzg5ZDY0ZDdhNTNkNDdlYzIwYyIsImlhdCI6MTY5MjI2MzMzNSwiZXhwIjoxNjkyMzQ5NzM1fQ.LLhHZYXTHWpnIo6LaEjVqzh13fEwmHn1BGKP75xzxBw"
+            }
           }
         },
 
         "example": {
-          "message": "We have sent you a link to your email to confirm your new password."
+          "status": "success",
+          "code": 200,
+          "data": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGRlMzg5ZDY0ZDdhNTNkNDdlYzIwYyIsImlhdCI6MTY5MjI2MzMzNSwiZXhwIjoxNjkyMzQ5NzM1fQ.LLhHZYXTHWpnIo6LaEjVqzh13fEwmHn1BGKP75xzxBw"
+          }
         }
       },
 
@@ -752,33 +774,6 @@
         "example": {
           "name": "Mango",
           "email": "user@example.com"
-        }
-      },
-
-      "PostVerifyRequest": {
-        "type": "object",
-        "required": ["email"],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          }
-        }
-      },
-
-      "PostVerifyResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "succses",
-            "example": "Verification email sent"
-          }
-        },
-
-        "example": {
-          "message": "Verification email sent"
         }
       },
 
@@ -1454,6 +1449,7 @@
         }
       }
     },
+
     "securitySchemes": {
       "Bearer": {
         "type": "http",

@@ -4,13 +4,12 @@ const { Conflict, BadRequest } = require('http-errors');
 const { User } = require('../../models');
 
 const register = async (req, res) => {
-  console.log(req.body);
   const { email, password, name } = req.body;
-  const user = await User.findOne({ email });
-
   if (!email || !password || !name) {
     throw new BadRequest('Missing required field');
   }
+
+  const user = await User.findOne({ email });
   if (user) {
     throw new Conflict(`User with ${email} already exist`);
   }
