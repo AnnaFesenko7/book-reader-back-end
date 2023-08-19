@@ -378,7 +378,7 @@
             "in": "path",
             "name": "bookId",
             "type": "string",
-            "example": "633430de05d976545f184b08",
+            "example": "64e0b271bb5344e5ed6f647c",
             "description": "id of the book",
             "required": true
           }
@@ -399,7 +399,13 @@
 
           "401": {
             "description": "Not authorized",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
           }
         }
       },
@@ -1001,14 +1007,26 @@
                       "example": 0
                     },
                     "owner": {
-                      "type": "string",
-                      "description": "owner's (user's) id",
-                      "example": "6331e0bd7d50cafaf02cf8c8"
-                    },
-                    "_id": {
-                      "type": "string",
-                      "description": "id of the book",
-                      "example": "633b1aae155b3020faa54d9e"
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "description": "User's id",
+                          "example": "6313700a788308a1f5ee225"
+                        },
+
+                        "name": {
+                          "type": "string",
+                          "description": "User's name",
+                          "example": "Mango"
+                        },
+
+                        "email": {
+                          "type": "string",
+                          "description": "User's email",
+                          "format": "email"
+                        }
+                      }
                     }
                   }
                 }
@@ -1028,9 +1046,14 @@
                 "author": "Sun Tzu",
                 "year": 1974,
                 "pages": 100,
-                "rating": 0,
                 "status": "toRead",
-                "owner": "6331e0bd7d50cafaf02cf8c8"
+                "rating": 0,
+                "resume": "",
+                "owner": {
+                  "_id": "64e0499caf142ceacd19aacb",
+                  "name": "Mango",
+                  "email": "user@example.com"
+                }
               },
               {
                 "_id": "6331fa40c8e0d7f99f187435",
@@ -1038,9 +1061,14 @@
                 "author": "George Orwell",
                 "year": 1949,
                 "pages": 100,
-                "rating": 0,
                 "status": "toRead",
-                "owner": "6331e0bd7d50cafaf02cf8c8"
+                "rating": 0,
+                "resume": "",
+                "owner": {
+                  "_id": "64e0499caf142ceacd19aacb",
+                  "name": "Mango",
+                  "email": "user@example.com"
+                }
               }
             ]
           }
@@ -1052,8 +1080,8 @@
         "properties": {
           "status": {
             "type": "string",
-            "description": "succses",
-            "example": "Succses"
+            "description": "success",
+            "example": "Success"
           },
           "code": {
             "type": "integer",
@@ -1090,15 +1118,20 @@
                     "description": "pages in book",
                     "example": 100
                   },
+                  "status": {
+                    "type": "string",
+                    "description": "curreny status of the book",
+                    "example": "toRead"
+                  },
                   "rating": {
                     "type": "integer",
                     "description": "rating of the book",
                     "example": 0
                   },
-                  "status": {
+                  "resume": {
                     "type": "string",
-                    "description": "curreny status of the book",
-                    "example": "toRead"
+                    "description": "resume",
+                    "example": ""
                   },
                   "owner": {
                     "type": "string",
@@ -1112,18 +1145,19 @@
         },
 
         "example": {
-          "status": "Succses",
+          "status": "Success",
           "code": 200,
           "payload": {
             "book": {
-              "_id": "633430de05d976545f184b08",
+              "_id": "64e0b271bb5344e5ed6f647c",
               "title": "The Art of War",
               "author": "Sun Tzu",
               "year": 1974,
               "pages": 100,
-              "rating": 0,
               "status": "toRead",
-              "owner": "6331e0bd7d50cafaf02cf8c8"
+              "rating": 0,
+              "resume": "",
+              "owner": "64e0499caf142ceacd19aacb"
             }
           }
         }
@@ -1134,13 +1168,13 @@
         "properties": {
           "status": {
             "type": "string",
-            "description": "succses",
-            "example": "Succses"
+            "description": "success",
+            "example": "Success"
           }
         },
 
         "example": {
-          "status": "Succses"
+          "status": "Success"
         }
       },
 
