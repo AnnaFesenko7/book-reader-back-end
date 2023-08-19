@@ -18,8 +18,8 @@
       "description": "Authorization endpoints"
     },
     {
-      "name": "User",
-      "description": "User endpoints"
+      "name": "Users",
+      "description": "Users endpoints"
     },
     {
       "name": "Books",
@@ -114,7 +114,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponseBadRequest"
+                  "$ref": "#/components/schemas/ResponseBadRequest"
                 }
               }
             }
@@ -125,7 +125,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponseUnauthorized"
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
                 }
               }
             }
@@ -147,15 +147,29 @@
           },
           "401": {
             "description": "Not authorized",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
           }
         }
       }
     },
 
-    "/user/current": {
+    "/auth/google": {
       "get": {
-        "tags": ["User"],
+        "tags": ["Auth"],
+        "summary": "Login from google",
+        "parameters": []
+      }
+    },
+
+    "/users/current": {
+      "get": {
+        "tags": ["Users"],
         "summary": "Current User info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -173,13 +187,105 @@
 
           "401": {
             "description": "Not authorized",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
           }
         }
       }
     },
 
-    "/api/books": {
+    "/users/language": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Select language",
+        "requestBody": {
+          "description": "Select language",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeLangRequest"
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeLangResponse"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/trainingStatus": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Change training status",
+        "requestBody": {
+          "description": "Change training status",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeTrainingStatusRequest"
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeTrainingStatusResponse"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/books": {
       "post": {
         "tags": ["Books"],
         "summary": "Add book",
@@ -197,7 +303,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -207,15 +313,26 @@
               }
             }
           },
-
           "400": {
-            "description": "missing required fields or the field did not pass validation",
-            "content": {}
+            "description": "Missing required name field or the field did not pass validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseBadRequest"
+                }
+              }
+            }
           },
 
           "401": {
             "description": "Not authorized",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
           }
         }
       },
@@ -240,13 +357,19 @@
 
           "401": {
             "description": "Not authorized",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUnauthorized"
+                }
+              }
+            }
           }
         }
       }
     },
 
-    "/api/books/{bookId}": {
+    "/books/{bookId}": {
       "get": {
         "tags": ["Books"],
         "summary": "Find book by id",
@@ -315,7 +438,7 @@
       }
     },
 
-    "/api/books/status/{bookId}": {
+    "/books/status/{bookId}": {
       "put": {
         "tags": ["Books"],
         "summary": "update status of the book",
@@ -362,7 +485,7 @@
       }
     },
 
-    "/api/books/resume/{bookId}": {
+    "/books/opinion/{bookId}": {
       "put": {
         "tags": ["Books"],
         "summary": "update resume of the book",
@@ -403,167 +526,6 @@
 
           "401": {
             "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-
-    "/api/books/edit/{bookId}": {
-      "put": {
-        "tags": ["Books"],
-        "summary": "update title, author or other properties of the book",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "bookId",
-            "example": "633430de05d976545f184b08",
-            "type": "string",
-            "description": "id of the book",
-            "required": true
-          }
-        ],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "new properties of the book",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutEditRequest"
-              }
-            }
-          }
-        },
-
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PutEditResponse"
-                }
-              }
-            }
-          },
-
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-
-    "/api/training": {
-      "post": {
-        "tags": ["Training"],
-        "summary": "Add user training",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Training's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostTrainingRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Chosen books have already been read or training period should be greater than 1 day and must not exceed 31 days",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          },
-          "403": {
-            "description": "Training is in progress",
-            "content": {}
-          }
-        }
-      },
-
-      "get": {
-        "tags": ["Training"],
-        "summary": "User training",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrainingResponse"
-                }
-              }
-            }
-          },
-
-          "404": {
-            "description": "Not found",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      },
-
-      "patch": {
-        "tags": ["Training"],
-        "summary": "Update user stats",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Stats's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PatchTrainingRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PatchTrainingResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Chosen books have already been read or training period should be greater than 1 day and must not exceed 31 days",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          },
-          "403": {
-            "description": "Training is completed!",
             "content": {}
           }
         }
@@ -692,7 +654,7 @@
         }
       },
 
-      "LoginResponseBadRequest": {
+      "ResponseBadRequest": {
         "type": "object",
         "properties": {
           "message": {
@@ -708,18 +670,18 @@
         }
       },
 
-      "LoginResponseUnauthorized": {
+      "ResponseUnauthorized": {
         "type": "object",
         "properties": {
           "message": {
             "type": "string",
-            "description": "Email or password is wrong",
-            "example": "Password wrong"
+            "description": "Not auth",
+            "example": "Not auth"
           },
           "code": {
             "type": "integer",
             "description": "code",
-            "example": 400
+            "example": 401
           }
         }
       },
@@ -759,21 +721,115 @@
       "CurrentResponse": {
         "type": "object",
         "properties": {
-          "name": {
+          "status": {
             "type": "string",
-            "description": "User's name",
-            "example": "Mango"
+            "description": "success",
+            "example": "success"
           },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 200
+          },
+          "data": {
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "Mango"
+            },
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "language": {
+              "type": "string",
+              "description": "Selected language",
+              "example": "en"
+            },
+            "isTrainingStarted": {
+              "type": "boolean",
+              "description": "User's training status",
+              "example": false
+            }
           }
         },
 
         "example": {
-          "name": "Mango",
-          "email": "user@example.com"
+          "status": "success",
+          "code": 200,
+          "data": {
+            "name": "Mango",
+            "email": "user@example.com",
+            "language": "en",
+            "isTrainingStarted": false
+          }
+        }
+      },
+
+      "ChangeLangRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "language": {
+            "type": "string",
+            "description": "Selected language",
+            "example": "ua"
+          }
+        }
+      },
+
+      "ChangeLangResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "success",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 200
+          },
+          "language": {
+            "type": "string",
+            "description": "Selected language",
+            "example": "ua"
+          }
+        }
+      },
+
+      "ChangeTrainingStatusRequest": {
+        "type": "object",
+        "required": ["isTrainingStarted"],
+        "properties": {
+          "isTrainingStarted": {
+            "type": "boolean",
+            "description": "Change training status",
+            "example": "true"
+          }
+        }
+      },
+
+      "ChangeTrainingStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "success",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "description": "code",
+            "example": 200
+          },
+          "isTrainingStarted": {
+            "type": "string",
+            "description": "Change training status",
+            "example": "true"
+          }
         }
       },
 
@@ -846,13 +902,18 @@
                   },
                   "status": {
                     "type": "string",
-                    "description": "curreny status of the book",
+                    "description": "current status of the book",
                     "example": "toRead"
                   },
                   "rating": {
                     "type": "integer",
                     "description": "rating of the book",
                     "example": 0
+                  },
+                  "resume": {
+                    "type": "string",
+                    "description": "resume",
+                    "example": ""
                   },
                   "owner": {
                     "type": "string",
@@ -872,7 +933,7 @@
 
         "example": {
           "status": "Success",
-          "code": 200,
+          "code": 201,
           "payload": {
             "book": {
               "title": "The Art of War",
@@ -880,7 +941,7 @@
               "year": 1974,
               "pages": 100,
               "status": "toRead",
-              "rating": 0,
+              "resume": "",
               "owner": "6337283619ffb3c7da56c9a4",
               "_id": "633b1aae155b3020faa54d9e"
             }
@@ -893,8 +954,8 @@
         "properties": {
           "status": {
             "type": "string",
-            "description": "succses",
-            "example": "Succses"
+            "description": "success",
+            "example": "Success"
           },
           "code": {
             "type": "integer",
@@ -957,7 +1018,7 @@
         },
 
         "example": {
-          "status": "Succses",
+          "status": "Success",
           "code": 200,
           "payload": {
             "books": [
